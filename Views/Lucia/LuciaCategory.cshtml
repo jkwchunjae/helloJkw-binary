@@ -81,9 +81,9 @@
 		<div class="row">
 			<div class="col-md-12 col-xs-12">
 				<div class="row">
+					@foreach (var product in @Model.ProductList)
+					{
 					<div class="col-sm-4 col-lg-4 col-md-4">
-						@foreach (var product in @Model.ProductList)
-						{
 						<div class="thumbnail">
 							<a href="/product/@Model.Category/@product.Name"><img src="http://placehold.it/320x150" alt=""></a>
 							<div class="caption">
@@ -104,8 +104,8 @@
 								</p>
 							</div>
 						</div>
-						}
 					</div>
+					}	
 				</div>
 			</div>
 		</div>
