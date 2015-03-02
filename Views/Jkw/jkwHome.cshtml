@@ -129,20 +129,23 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-4 col-sm-6 game-item">
-					<a href="/game/colorconquer" class="game-link" data-toggle="modal">
+				@*@foreach (var game in Model.Games)*@
+				{
+				@*<div class="col-md-4 col-sm-6 game-item">
+					<a href="/games/@game.Item1" class="game-link" data-toggle="modal">
 						<div class="game-hover">
 							<div class="game-hover-content">
 								<i class="fa fa-th fa-3x"></i>
 							</div>
 						</div>
-						<img src="/Static/Agency/img/header-bg.jpg" class="img-responsive" alt="">
+						<img src="/_Jkw/Games/@game.Item1/@game.Item3" class="img-responsive" alt="">
 					</a>
 					<div class="game-caption">
-						<h4>땅따먹기</h4>
+						<h4>@game.Item2</h4>
 						<p class="text-muted"></p>
 					</div>
-				</div>
+				</div>*@
+				}
 				@*
 				<div class="col-md-4 col-sm-6 game-item">
 					<a href="#portfolioModal2" class="game-link" data-toggle="modal">
