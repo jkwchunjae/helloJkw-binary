@@ -4,8 +4,8 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta name="author" content="jkw">
 	<meta name="description" content="">
+	<meta name="author" content="">
 	<title>HelloJkw!!</title>
 	<!-- Bootstrap Core CSS -->
 	<link href="/Static/Agency/css/bootstrap.min.css" rel="stylesheet">
@@ -47,11 +47,24 @@
 			<!-- Collect the nav links, forms, and other content for toggling -->
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav navbar-right">
-					<li class="hidden"> <a href="#page-top"></a> </li>
-					<li> <a class="page-scroll" href="#projects">Projects</a> </li>
-					<li> <a class="page-scroll" href="/blog">Blog</a> </li>
-					<li> <a class="page-scroll" href="#games">Games</a> </li>
-					<li> <a class="page-scroll" href="#about">About</a> </li>
+					<li class="hidden">
+						<a href="#page-top"></a>
+					</li>
+					<li>
+						<a class="page-scroll" href="#projects">Projects</a>
+					</li>
+					<li>
+						<a class="page-scroll" href="#games">Games</a>
+					</li>
+					<li>
+						<a class="page-scroll" href="#about">About</a>
+					</li>
+					@*<li>
+						<a class="page-scroll" href="#me">Me</a>
+					</li>*@
+					@*<li>
+						<a class="page-scroll" href="#contact">Contact</a>
+					</li>*@
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -112,26 +125,26 @@
 			<div class="row">
 				<div class="col-lg-12 text-center">
 					<h2 class="section-heading">Games</h2>
-					<h3 class="section-subheading text-muted">간단한 !게!임!을 즐길 수 있습니다!</h3>
+					<h3 class="section-subheading text-muted">간단한 게임을 즐길 수 있습니다!</h3>
 				</div>
 			</div>
 			<div class="row">
-				@foreach (var game in @Model.games)
+				@*@foreach (var game in Model.Games)*@
 				{
-				<div class="col-md-4 col-sm-6 game-item">
-					<a href="/games/@game.engName" class="game-link" data-toggle="modal">
+				@*<div class="col-md-4 col-sm-6 game-item">
+					<a href="/games/@game.Item1" class="game-link" data-toggle="modal">
 						<div class="game-hover">
 							<div class="game-hover-content">
 								<i class="fa fa-th fa-3x"></i>
 							</div>
 						</div>
-						<img src="/jkw/Games/@game.engName/@game.thumbnail" class="img-responsive" alt="">
+						<img src="/_Jkw/Games/@game.Item1/@game.Item3" class="img-responsive" alt="">
 					</a>
 					<div class="game-caption">
-						<h4>@game.korName</h4>
+						<h4>@game.Item2</h4>
 						<p class="text-muted"></p>
 					</div>
-				</div>
+				</div>*@
 				}
 				@*
 				<div class="col-md-4 col-sm-6 game-item">
@@ -437,6 +450,29 @@
 				<div class="col-md-4">
 					<span class="copyright">Copyright &copy; Hello Jkw 2015</span>
 				</div>
+				@*<div class="col-md-4">
+					<ul class="list-inline social-buttons">
+						<li>
+							<a href="#"><i class="fa fa-twitter"></i></a>
+						</li>
+						<li>
+							<a href="#"><i class="fa fa-facebook"></i></a>
+						</li>
+						<li>
+							<a href="#"><i class="fa fa-linkedin"></i></a>
+						</li>
+					</ul>
+				</div>*@
+				@*<div class="col-md-4">
+					<ul class="list-inline quicklinks">
+						<li>
+							<a href="#">Privacy Policy</a>
+						</li>
+						<li>
+							<a href="#">Terms of Use</a>
+						</li>
+					</ul>
+				</div>*@
 			</div>
 		</div>
 	</footer>
