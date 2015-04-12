@@ -1,0 +1,78 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+	Layout = "Layout.cshtml";
+	var chartObject = @Model.chartObject;
+}
+
+@section Css
+{
+	@*<link href="/Static/css/jkwBlogHome.css" rel="stylesheet">*@
+	@*<link href="/Static/css/prism.css" rel="stylesheet">*@
+}
+
+@section Javascript
+{
+	<script src="/Static/Highcharts-4.1.4/js/highcharts.js"></script>
+	<script type="text/javascript">
+		$("nav.navbar").addClass("navbar-shrink");
+		$("li#menu-project").addClass("active");
+
+
+		$(function () {
+			$('#kbochart').highcharts({
+				title: {
+					text: 'KBO 2015시즌 게임차 그래프',
+					x: -20 //center
+				},
+				xAxis: {
+					categories: [@chartObject.DateList]
+				},
+				yAxis: {
+					title: {
+						text: '게임차'
+					},
+					reversed: true,
+					min: 0,
+					//plotLines: [{
+					//	value: 0,
+					//	width: 1,
+					//	color: '#808080'
+					//}]
+				},
+				//tooltip: {
+				//	valueSuffix: '°C'
+				//},
+				legend: {
+					layout: 'vertical',
+					align: 'right',
+					verticalAlign: 'middle',
+					borderWidth: 0
+				},
+				series: [
+				@foreach (var @teamGBInfo in @chartObject.TeamGBInfo)
+				{
+@:{
+	@:name: ' @teamGBInfo.Item1 ',
+	@:data: [@teamGBInfo.Item2]
+@:},
+				} ]
+			});
+		});
+	</script>
+}
+
+<div id="kbochart" style="min-width: 500px; height: 400px; margin: 0 auto"></div>
+
+<div id="disqus_thread"></div>
+<script type="text/javascript">
+	/* * * CONFIGURATION VARIABLES * * */
+	var disqus_shortname = 'hellojkw';
+
+	/* * * DON'T EDIT BELOW THIS LINE * * */
+	(function () {
+		var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+		dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+		(document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	})();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
