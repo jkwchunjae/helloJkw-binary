@@ -34,14 +34,14 @@
 					</span>
 					<select id="select-diff-rank" class="form-control" aria-describedby="select-diff-rank-label">
 						@*<option value="none">순위 비교</option>*@
-						<option value="1d">어제</option>
-						<option value="3d">3일전</option>
-						<option value="7d">7일전</option>
-						<option value="2w">14일전</option>
-						<option value="1m">1달전</option>
-						<option value="2m">2달전</option>
-						<option value="1y" selected="selected">작년 시즌</option>
-						<option value="2y">제작년 시즌</option>
+						<option value="1d" id="option-1d">어제</option>
+						<option value="3d" id="option-3d">3일전</option>
+						<option value="7d" id="option-7d">7일전</option>
+						<option value="2w" id="option-2w">14일전</option>
+						<option value="1m" id="option-1m">1달전</option>
+						<option value="2m" id="option-2m">2달전</option>
+						<option value="1y" id="option-1y">작년 시즌</option>
+						<option value="2y" id="option-2y">제작년 시즌</option>
 					</select>
 				</div>
 			</div>
@@ -125,6 +125,7 @@
 
 
 		$(function () {
+			$('option#option-7d').attr('selected', 'selected');
 			$('#kbochart').highcharts({
 				title: {
 					//text: 'KBO @chartObject.Year 시즌 게임차 그래프',
