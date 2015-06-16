@@ -1,1 +1,251 @@
-﻿Color Conquer main page.
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+	Layout = "Layout.cshtml";
+}
+
+<div ng-app="app-color-conquer" ng-controller="controller-color-conquer">
+	<div class="place form-inline" id="login">
+		<label class="sr-only" for="userName">이름</label>
+		<input type="text" id="userName" class="form-control" ng-model="userName" placeholder="이름"/>
+		<button class="btn btn-success" id="login" ng-click="login(userName)">채널 입장</button>
+	</div>
+	<div class="place" id="channel">
+		<div class="form-inline" id="new-room">
+			<input type="text" class="form-control" id="new-room-name" placeholder="방 제목"/>
+			<button class="btn btn-success" id="create-room">방 만들기</button>
+		</div>
+		<ul id="room-list">
+			<li class="room" ng-repeat="room in roomList">
+				<div class="room-name">{{room.roomName}}</div>
+				<button class="btn btn-info btn-sm enter-room" ng-click="enterRoom(room.roomName)">참여!</button>
+			</li>
+		</ul>
+	</div>
+	<div class="place" id="room">
+		<p class="room-name">{{roomName}}</p>
+		<button class="btn btn-default" ng-click="leaveRoom(roomName)">나가기</button>
+		<div class="form-inline">
+			<input type="number" class="form-control" id="size" ng-model="size" placeholder="게임판의 크기" />
+			<input type="number" class="form-control" id="countColor" ng-model="countColor" placeholder="게임의색 종류" />
+			<button class="btn btn-default" ng-click="startGame()">게임시작</button>
+		</div>
+		<div id="game-board">
+		</div>
+		<ul id="user-list">
+			<li class="user" ng-repeat="user in userList">
+				<span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+				{{user.userName}}
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="console">
+
+</div>
+
+@section Css
+{
+<style type="text/css">
+	#console {
+		position: fixed;
+		top: 80px;
+		left: 60%;
+		width: 35%;
+		z-index: -1;
+	}
+
+	.place {
+		display: none;
+	}
+</style>
+}
+
+@section Javascript
+{
+<script type="text/javascript">
+	$("nav.navbar").addClass("navbar-shrink");
+	$("li#menu-games").addClass("active");
+
+	var app = angular.module('app-color-conquer', []);
+	app.controller('controller-color-conquer', function ($scope) {
+		var changeUserPlace = function (place) {
+			$('.place').css('display', 'none');
+			$('#' + place).css('display', 'block');
+		};
+
+		$scope.login = function (userName) {
+			if (userName == '') {
+				showAlert('이름을 입력하세요.');
+				$('input#userName').focus();
+				return;
+			}
+			var message = {
+				packetType: 'TryEnterChannel',
+				userName: userName
+			};
+			sendMessage(message);
+		}
+
+		$scope.enterRoom = function (roomName) {
+			var message = {
+				packetType: 'TryEnterRoom',
+				roomName: roomName
+			};
+			sendMessage(message);
+		};
+
+		$scope.leaveRoom = function (roomName) {
+			var message = {
+				packetType: 'TryLeaveRoom'
+			};
+			sendMessage(message);
+		};
+
+		$scope.startGame = function () {
+			var message = {
+				packetType: 'TryStartGame',
+				size: $scope.size,
+				countColor: $scope.countColor
+			};
+			sendMessage(message);
+		};
+
+		var ws = new WebSocket("ws://localhost:55591/colorconquer");
+		//var ws = new WebSocket("ws://hellojkw.com:55591/colorconquer");
+
+		var Log = function (message) {
+			var p = document.createElement('p');
+			$(p).text(message);
+			$('#console').prepend(p);
+		};
+
+		var sendMessage = function (obj) {
+			var data = JSON.stringify(obj);
+			Log('send: ' + data);
+			ws.send(data);
+		};
+
+		ws.onopen = function (e) {
+			changeUserPlace('login');
+			$scope.login('User' + Math.round(Math.random() * 1000));
+		};
+
+		ws.onmessage = function (e) {
+			Log('recv: ' + e.data);
+			var obj = JSON.parse(e.data);
+			processPacket(obj);
+		};
+
+		ws.onerror = function (e) {
+			Log('error: ' + e.message);
+		};
+
+		ws.onclose = function (e) {
+			Log('close: ' + e.code);
+		};
+
+		$("#create-room").click(function () {
+			var roomName = $('#new-room-name').val();
+			var obj = {
+				packetType: 'TryCreateRoom',
+				roomName: roomName
+			};
+			sendMessage(obj);
+		});
+
+		var sendMessage = function (obj) {
+			var data = JSON.stringify(obj);
+			Log('send: ' + data);
+			ws.send(data);
+		};
+
+		var processPacket = function (obj) {
+			switch (obj.packetType) {
+				case 'ResultEnterChannel':
+					ResultEnterChannel(obj.data);
+					break;
+				case 'ResultRoomList':
+					ResultRoomList(obj.data);
+					break;
+				case 'ResultEnterRoom':
+					ResultEnterRoom(obj.data);
+					break;
+				case 'ResultLeaveRoom':
+					ResultLeaveRoom(obj.data);
+				case 'UserList':
+					RecvUserList(obj.data);
+					break;
+				case 'ResultStartGame':
+					ResultStartGame(obj.data);
+					break;
+			}
+		};
+
+		var RequestRoomList = function () {
+			var obj = {
+				packetType: 'RequestRoomList'
+			};
+			sendMessage(obj);
+		};
+
+		var ResultEnterChannel = function (data) {
+			if (data.result == 'false') {
+				showAlert('채널 입장에 실패하였습니다.')
+				return;
+			}
+			changeUserPlace('channel');
+			showAlert(data.userName + '님 안녕하세요!');
+			RequestRoomList();
+		};
+
+		var ResultRoomList = function (data) {
+			$scope.roomList = [];
+			$.each(data, function (index, room) {
+				$scope.roomList.push({ roomName: room.roomName });
+			});
+			$scope.$apply();
+		};
+
+		var ResultEnterRoom = function (data) {
+			if (data.result == 'false') {
+				showAlert('방 입장에 실패하였습니다.');
+				return;
+			}
+			changeUserPlace('room');
+			$scope.roomName = data.roomName;
+			$scope.$apply();
+			showAlert(data.roomName + '방에 입장하였습니다.');
+		};
+
+		var ResultLeaveRoom = function (data) {
+			if (data.result == 'false') {
+				showAlert('방 나가기에 실패하였습니다.');
+				return;
+			}
+			ResultEnterChannel(data);
+		};
+
+		var RecvUserList = function (data) {
+			$scope.userList = [];
+			$.each(data, function (index, user) {
+				$scope.userList.push({ userName: user.userName });
+			});
+			$scope.$apply();
+		};
+
+		var ResultStartGame = function (data) {
+			if (data.result == 'false') {
+				showAlert('게임 시작이 실패하였습니다.');
+				return;
+			}
+		};
+	});
+
+	$(document).ready(function () {
+	});
+</script>
+}
+
+@section JavascriptRelease
+{
+}

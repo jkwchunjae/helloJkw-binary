@@ -1,0 +1,203 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+    Layout = "LayoutBlog.cshtml";
+}
+
+<ul id="post-list">
+	<li>
+		<div class="row">
+			<form class="col-md-9 col-xs-9 post">
+				<span class="filename">
+					<input type="text" class="form-control" id="new-post-date" value="@DateTime.Today.ToString("yyyyMMdd")" placeholder="yyyymmdd"/>
+					<input type="text" class="form-control" id="new-post-name" placeholder="파일명이 될 영문"/>
+				</span>
+				@*<span class="post-title">
+					<input type="text" class="form-control" id="new-post-title" placeholder="화면에 보여질 한글" value="블로그 글쓰기 테스트"/>
+				</span>*@
+			</form>
+			<div class="col-md-3 col-xs-3">
+				<button class="btn btn-success post-new">글쓰기</button>
+			</div>
+		</div>
+	</li>
+@foreach (var post in @Model.post)
+{
+	<li>
+		<div class="row">
+			<div class="col-md-9 col-xs-9 post">
+				<span class="post-title"><a href="/blog/post/@post.Name">@post.Title</a></span>
+				<span class="filename old-name">@post.Date.ToString("yyyyMMdd")-@post.Name</span>
+				<input class="form-control new-name"/>
+			</div>
+			<div class="col-md-3 col-xs-3">
+				<button class="btn btn-warning post-edit">수정</button>
+				<button class="btn btn-danger post-delete-modal">삭제</button>
+			</div>
+		</div>
+	</li>
+}
+</ul>
+
+<div class="modal fade">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				<h4 class="modal-title">삭제 확인</h4>
+			</div>
+			<div class="modal-body">
+				<p>
+				<span class="filename"></span>
+				<span class="post-title"></span>
+				</p>
+				<p>위 파일을 삭제하시겠습니까?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+				<button type="button" class="btn btn-danger post-delete">삭제</button>
+			</div>
+		</div><!-- /.modal-content -->
+	</div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+@section Javascript
+{
+	<script type="text/javascript">
+		$(document).ready(function () {
+			$('button.post-new').click(function () {
+				var date = $('input#new-post-date').val();
+				var name = $('input#new-post-name').val().trim();
+				if (name == '') {
+					showAlert('파일이름을 입력하세요.');
+					$('input#new-post-name').focus();
+					return;
+				} else if (name.indexOf(' ') >= 0) {
+					showAlert('파일이름에 공백을 없애주세요.');
+					$('input#new-post-name').focus();
+					return;
+				}
+					
+				$.post('/blog/new/' + date + '/' + name);
+			});
+
+			$('button.post-edit').click(function () {
+				var post = $(this).parent().parent().parent();
+				var filename = $(post).find('.filename').text();
+				$.post('/blog/edit/' + filename);
+			});
+
+			$('button.post-delete-modal').click(function () {
+				var post = $(this).parent().parent().parent();
+				var filename = $(post).find('.filename').text();
+				var postTitle = $(post).find('.post-title').text();
+				$('.modal .filename').text(filename);
+				$('.modal .post-title').text(postTitle);
+				$('.modal .delete-result').remove();
+				$('.modal').modal('show');
+			});
+
+			$('button.post-delete').click(function () {
+				var modalContent = $(this).parent().parent();
+				var filename = $(modalContent).find('.filename').text();
+				$.post('/blog/delete/' + filename, function (data) {
+					$('.modal').modal('hide');
+					showAlert(data);
+					//var result = document.createElement('p');
+					//$(result).addClass('delete-result').text(data);
+					//$('.modal .modal-body').append(result);
+				});
+			});
+
+			$('span.old-name').dblclick(function () {
+				$(this).css('display', 'none');
+				var newName = $(this).siblings('.new-name');
+				$(newName).css('display', 'block').val($(this).text());
+				$(newName).focus();
+			});
+
+			$('input.new-name').focusout(function () {
+				$(this).css('display', 'none');
+				var oldName = $(this).siblings('.old-name');
+				$(oldName).css('display', 'block');
+			});
+
+			$('input.new-name').keydown(function (e) {
+				var oldName = $(this).siblings('.old-name');
+				var newName = this;
+				if (e.which == 27) {
+					// ESC
+					$(this).css('display', 'none');
+					$(oldName).css('display', 'block');
+				} else if (e.which == 13) {
+					// ENTER
+					var oldFileName = $(oldName).text();
+					var newFileName = $(this).val().trim();
+
+					if (newFileName.indexOf(' ') >= 0) {
+						showAlert('파일이름에 공백이 있습니다.');
+						return;
+					} else if (oldFileName == newFileName) {
+						showAlert('파일이름이 변하지 않았습니다.');
+						return;
+					}
+
+					$.post('/blog/rename/' + oldFileName + '/' + newFileName, function (data) {
+						$(oldName).text(data);
+						$(oldName).css('display', 'block');
+						$(newName).css('display', 'none');
+
+						showAlert('파일이름이 수정되었습니다.');
+					});
+				}
+			});
+		});
+	</script>
+}
+
+@section Css
+{
+	<style type="text/css">
+
+		form span {
+			padding-bottom: 10px;
+		}
+
+		form input.form-control {
+			display: inline-block;
+			width: initial;
+		}
+
+		input#new-post-date {
+			width: 17%;
+		}
+
+		input#new-post-name {
+			width: 75%;
+		}
+
+		input#new-post-title {
+			width: 100%;
+		}
+
+		div.row span, .modal-body span {
+			display: block;
+		}
+
+		div.row a {
+			/*display: none;*/
+		}
+
+		ul#post-list li {
+			list-style: none;
+			padding: 5px;
+		}
+
+		ul#post-list li:hover {
+			background-color: #efeb98;
+		}
+
+		.new-name {
+			display: none;
+		}
+	</style>
+}
