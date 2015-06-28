@@ -1,13 +1,5 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @{
-	string title;
-	try { title = @Model.Title; } catch { title = "Hello Jkw!"; }
-	string desc;
-	try { desc = @Model.Desc; } catch { desc = ""; }
-	string redirectUrl = Model.isDebug ? "http://localhost/oauth/login" : "http://hellojkw.com/oauth/login";
-	string loginUrl = "https://accounts.google.com/o/oauth2/auth?client_id=381224079549-pmkekmoko01ss0uqle22q0btsam7nluh.apps.googleusercontent.com&redirect_uri=" + redirectUrl + "&scope=https://www.googleapis.com/auth/plus.login&response_type=code";
-	redirectUrl = Model.isDebug ? "http://localhost/oauth/register" : "http://hellojkw.com/oauth/register";
-	string registerUrl = "https://accounts.google.com/o/oauth2/auth?client_id=381224079549-pmkekmoko01ss0uqle22q0btsam7nluh.apps.googleusercontent.com&redirect_uri=" + redirectUrl + "&scope=https://www.googleapis.com/auth/plus.login&response_type=code";
 }
 <!DOCTYPE html>
 <html lang="ko">
@@ -16,16 +8,14 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="author" content="jkw">
-	<meta name="description" content="@desc">
-	<title>@title</title>
+	<meta http-equiv="refresh" content="0;URL=@Model.RedirectUrl" />
+	<title>Hello Jkw</title>
 	<!-- Bootstrap Core CSS -->
 	<link href="/Static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<!-- Custom CSS -->
-	<link href="/Static/Agency/css/agency.css" rel="stylesheet"/>
+	<link href="/Static/Agency/css/agency.css" rel="stylesheet" />
 	<link href="/Static/css/jkwLayout.css" rel="stylesheet" />
-	@RenderSection("Css")
 	<!-- Custom Fonts -->
-	<link href="/Static/Agency/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 	<link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
 	<link href='http://fonts.googleapis.com/css?family=Kaushan+Script' rel='stylesheet' type='text/css'>
 	<link href='http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
@@ -36,7 +26,6 @@
 		<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
 		<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
-
 	<!-- Angular -->
 	<script src="/Static/js/angular.min.js"></script>
 </head>
@@ -62,28 +51,6 @@
 					<li id="menu-blog"> <a class="page-scroll" href="/blog">Blog</a> </li>
 					<li id="menu-games"> <a class="page-scroll" href="/#games">Games</a> </li>
 					<li id="menu-about"> <a class="page-scroll" href="/#about">About</a> </li>
-					@if (@Model.isLogin)
-					{
-						<li class="dropdown" id="menu-login">
-							<a class="dropdown-toggle" data-toggle="dropdown" role="button" id="navbar-user-image" style="padding-top:0;padding-bottom:0;cursor:pointer;">
-								<img src="@Model.user.ImageUrl" title="@Model.user.Name" alt="@Model.user.Name" class="img-circle navbar-user-image" />
-							</a>
-							<ul class="dropdown-menu">
-								<li><a class="page-scroll" href="/user">Edit user info</a></li>
-								<li><a class="page-scroll" href="/logout">Logout</a></li>
-							</ul>
-						</li>
-					}
-					else
-					{
-						<li class="dropdown" id="menu-login">
-							<a class="dropdown-toggle page-scroll" data-toggle="dropdown" role="button" href="#">Login<span class="caret"></span></a>
-							<ul class="dropdown-menu">
-								<li><a class="page-scroll" href="@loginUrl">Login</a></li>
-								<li><a class="page-scroll" href="/register">Register</a></li>
-							</ul>
-						</li>
-					}
 				</ul>
 			</div>
 			<!-- /.navbar-collapse -->
@@ -92,11 +59,10 @@
 	</nav>
 
 	<div class="fixed-alert">
-		테스트 메세지
 	</div>
 
 	<div class="container" id="layout-content">
-		@RenderBody()
+		리다이렉트 화면입니다. 이동하지 않으면 <a href="@Model.RedirectUrl" style="color:blue;text-decoration:underline;">여기</a>를 눌러주세요.
 	</div>
 
 	<footer>
@@ -112,7 +78,6 @@
 	<script src="/Static/js/jquery-2.1.3.min.js"></script>
 	<!-- Bootstrap Core JavaScript -->
 	<script src="/Static/bootstrap/js/bootstrap.min.js"></script>
-	@RenderSection("Javascript")
 	<script type="text/javascript">
 		var alertNumber;
 		var showAlert = function (message) {
@@ -130,32 +95,5 @@
 			closeAlert();
 		});
 	</script>
-	@if (!@Model.isDebug)
-	{
-	@RenderSection("JavascriptRelease")
-	<script type="text/javascript">
-		/* * * CONFIGURATION VARIABLES * * */
-		var disqus_shortname = 'hellojkw';
-
-		/* * * DON'T EDIT BELOW THIS LINE * * */
-		(function () {
-			var s = document.createElement('script'); s.async = true;
-			s.type = 'text/javascript';
-			s.src = '//' + disqus_shortname + '.disqus.com/count.js';
-			(document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
-		}());
-	</script>
-	<script>
-		(function (i, s, o, g, r, a, m) {
-			i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
-				(i[r].q = i[r].q || []).push(arguments)
-			}, i[r].l = 1 * new Date(); a = s.createElement(o),
-			m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
-		})(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-
-		ga('create', 'UA-49135864-2', 'auto');
-		ga('send', 'pageview');
-	</script>
-	}
 </body>
 </html>
