@@ -10,17 +10,41 @@
 
 <div class="playground" ng-app="app-color-conquer" ng-controller="controller-color-conquer">
 	<div class="place" id="channel">
-		<div class="form-inline" id="new-room">
-			<input type="text" class="form-control" id="new-room-name" placeholder="방 제목"/>
-			<button class="btn btn-success" id="create-room">방 만들기</button>
+		<div class="col-md-8" id="channel-left">
+			<div class="form-inline" id="new-room">
+				<input type="text" class="form-control" id="new-room-name" ng-model="newRoomName" placeholder="방 제목"/>
+				<button class="btn btn-success" id="create-room" ng-click="createRoom(newRoomName)">방 만들기</button>
+			</div>
+			<ul id="room-list">
+				<li class="room" ng-repeat="room in roomList">
+					<div class="room-name">{{room.roomName}}</div>
+					<button class="btn btn-info btn-sm enter-room" ng-click="enterRoom(room.roomName)">참여!</button>
+					<button class="btn btn-warning btn-sm enter-room" ng-click="enterRoomMonitor(room.roomName)">관전!</button>
+				</li>
+			</ul>
 		</div>
-		<ul id="room-list">
-			<li class="room" ng-repeat="room in roomList">
-				<div class="room-name">{{room.roomName}}</div>
-				<button class="btn btn-info btn-sm enter-room" ng-click="enterRoom(room.roomName)">참여!</button>
-				<button class="btn btn-warning btn-sm enter-room" ng-click="enterRoomMonitor(room.roomName)">관전!</button>
-			</li>
-		</ul>
+		<div class="col-md-4" id="channel-right">
+			<div class="row">
+				<ul id="user-list">
+					<li class="user" ng-repeat="user in userList">
+						<img class="userlist-image" src="{{user.userImage}}" />
+						{{user.userName}}, {{user.roomName}}
+					</li>
+				</ul>
+			</div>
+			<div class="row row-chat">
+				<div class="chat-list" id="lobby-chat" style="overflow-y:auto;">
+					<div class="chat-lobby" ng-repeat="chat in chatLobbyList">
+						<div class="chat-lobby-speaker">{{chat.speakerName}}</div>
+						<div class="chat-lobby-message">{{chat.message}}</div>
+					</div>
+				</div>
+				<div class="chat-message input-group">
+					<input type="text" class="chat-text form-control" id="chat-channel-msg" ng-model="chatChannelMessage"/>
+					<div class="btn btn-default chat-send input-group-addon" ng-click="chat('ChatChannel', chatChannelMessage)">Enter</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	<div class="place" id="room">
 		<div class="col-md-8" id="room-left">
@@ -35,6 +59,14 @@
 			</div>
 			<div id="game-board">
 			</div>
+			<div id="game-pad">
+				<div class="game-button col-xs-4" data-color="A" ng-click="clickCell('A')"></div>
+				<div class="game-button col-xs-4" data-color="B" ng-click="clickCell('B')"></div>
+				<div class="game-button col-xs-4" data-color="C" ng-click="clickCell('C')"></div>
+				<div class="game-button col-xs-4" data-color="D" ng-click="clickCell('D')"></div>
+				<div class="game-button col-xs-4" data-color="E" ng-click="clickCell('E')"></div>
+				<div class="game-button col-xs-4" data-color="F" ng-click="clickCell('F')"></div>
+			</div>
 		</div>
 		<div class="col-md-4" id="room-right">
 			<div class="row">
@@ -43,8 +75,13 @@
 			</div>
 			<div class="row" id="start-game-section">
 				<div class="col-xs-8">
-					<input type="number" class="form-control" id="size" ng-model="size" placeholder="게임판의 크기" />
-					@*<input type="number" class="form-control" id="countColor" ng-model="countColor" placeholder="게임의색 종류" />*@
+					<select class="form-control" id="size" ng-model="size" ng-init="size=11">
+						<option value="7">7</option>
+						<option value="9">9</option>
+						<option value="11">11</option>
+						<option value="13">13</option>
+						<option value="15">15</option>
+					</select>
 				</div>
 				<button class="btn btn-default col-xs-4" ng-click="startGame()">게임시작</button>
 			</div>
@@ -58,6 +95,13 @@
 					{{user.userName}}
 				</li>
 			</ul>
+			</div>
+			<div class="row row-chat">
+				<div id="room-chat"></div>
+				<div class="form-inline">
+					<input type="text" class="form-control" id="chat-room-msg" ng-model="chatRoomMessage" />
+					<button class="btn btn-default" ng-click="chat('ChatRoom', chatRoomMessage)">Enter</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -101,13 +145,21 @@
 	ColorSet['C'] = '#FFE699';
 	ColorSet['D'] = '#C6E0B4';
 	ColorSet['E'] = '#FF9595';
-	ColorSet['F'] = '#DBDBDB';
+	ColorSet['F'] = '#999999';
 
 	var app = angular.module('app-color-conquer', []);
 	app.controller('controller-color-conquer', function ($scope) {
+		$scope.chatLobbyList = [];
 
 		$.connection.hub.url = '@serverAddress';
 		var game = $.connection.colorConquerHub;
+
+		$('div.game-button[data-color="A"]').css('background-color', ColorSet['A']);
+		$('div.game-button[data-color="B"]').css('background-color', ColorSet['B']);
+		$('div.game-button[data-color="C"]').css('background-color', ColorSet['C']);
+		$('div.game-button[data-color="D"]').css('background-color', ColorSet['D']);
+		$('div.game-button[data-color="E"]').css('background-color', ColorSet['E']);
+		$('div.game-button[data-color="F"]').css('background-color', ColorSet['F']);
 
 		game.client.ServerToClient = function (data) {
 			Log('recv: ' + data);
@@ -152,7 +204,23 @@
 				userImage: userImage
 			};
 			sendMessage(message);
-		}
+		};
+
+		$scope.chat = function (packetType, chatMessage) {
+			var message = {
+				packetType: packetType,
+				message: chatMessage
+			};
+			sendMessage(message);
+		};
+
+		$scope.createRoom = function (roomName) {
+			var obj = {
+				packetType: 'TryCreateRoom',
+				roomName: roomName
+			};
+			sendMessage(obj);
+		};
 
 		$scope.enterRoom = function (roomName) {
 			var message = {
@@ -168,6 +236,14 @@
 				roomName: roomName
 			};
 			sendMessage(message);
+		};
+
+		$scope.clickCell = function (color) {
+			var obj = {
+				packetType: 'ClickCell',
+				color: color
+			};
+			sendMessage(obj);
 		};
 
 		$scope.leaveRoom = function () {
@@ -237,15 +313,6 @@
 		};
 		*@
 
-		$("#create-room").click(function () {
-			var roomName = $('#new-room-name').val();
-			var obj = {
-				packetType: 'TryCreateRoom',
-				roomName: roomName
-			};
-			sendMessage(obj);
-		});
-
 		var processPacket = function (obj) {
 			switch (obj.packetType) {
 				case 'ResultEnterChannel':
@@ -276,6 +343,13 @@
 					break;
 				case 'GameFinished':
 					GameFinished(obj.data);
+					break;
+				case 'ChatChannel':
+					$scope.chatLobbyList.push({ speakerName: obj.data.speakerName, message: obj.data.message });
+					$('#lobby-chat').animate({
+						scrollTop: $('#lobby-chat')[0].scrollHeight
+					}, 1000);
+					$scope.$apply();
 					break;
 			}
 		};
@@ -340,7 +414,7 @@
 			$scope.userList = [];
 			$('#start-game-section').css('display', 'none');
 			$.each(data, function (index, user) {
-				$scope.userList.push({ userName: user.userName, userImage: user.userImage });
+				$scope.userList.push({ userName: user.userName, userImage: user.userImage, roomName: user.roomName });
 
 				if (user.userType == 'Alice') {
 					if ($scope.BobName == user.userName) {
@@ -356,7 +430,9 @@
 				}
 
 				if (user.userType == 'Alice' && user.userName == player.name) {
-					$('#start-game-section').css('display', 'block');
+					if (!player.isGameRunning) {
+						$('#start-game-section').css('display', 'block');
+					}
 					player.isPlayer = true;
 				} else if (user.userType == 'Bob' && user.userName == player.name) {
 					player.isPlayer = true;
@@ -371,6 +447,7 @@
 				return;
 			}
 			$('#game-control').css('display', 'block');
+			$('#start-game-section').css('display', 'none');
 			player.isGameRunning = true;
 			SetBoard(data.size, data.cellsColor, data);
 		};

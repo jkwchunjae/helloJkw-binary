@@ -46,3 +46,64 @@ img.userlist-image {
 	height: 40px;
 	border-radius: 50%;
 }
+
+div#game-pad {
+	display: block;
+	height: 80px;
+}
+
+div#game-pad div {
+	cursor: pointer;
+	width: 25%;
+	height: 30px;
+	margin: 2px;
+	border-radius: 5px;
+	/*background-color: #ccc;*/
+}
+
+@media(min-width:768px) {
+	div#game-pad {
+		display: none;
+	}
+}
+/* 채팅 시작 */
+
+div.row-chat {
+	display: none;
+}
+
+div.chat-list {
+	height: 300px;
+	width: 100%;
+	border: 1px solid #ccc;
+}
+
+/*div.chat-message {
+	border-collapse: separate;
+	display: inline-table;
+	position: relative;
+}
+
+div.chat-message input.chat-text {
+	display: table-cell;
+	border-collapse: separate;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-right-radius: 0;
+	border-top: none;
+	margin: 0;
+}
+
+div.chat-message button.chat-send {
+	display: table-cell;
+	border-collapse: separate;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+	border-bottom-left-radius: 0;
+	border-top: none;
+	border-left: none;
+}*/
+
+/* 채팅 종료 */
+
+
