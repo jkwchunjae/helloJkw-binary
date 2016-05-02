@@ -1,4 +1,5 @@
 ﻿function getDate8(date /* moment object */) {
+<<<<<<< HEAD
 	try {
 		return date.year() * 10000 + (date.month() + 1) * 100 + date.date();
 	}
@@ -9,6 +10,8 @@
 }
 
 function getDateDot(date /* moment object */) {
+=======
+>>>>>>> origin/master
 	return date.year() + '.' + padStr(date.month() + 1) + '.' + padStr(date.date());
 }
 
