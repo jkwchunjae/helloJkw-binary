@@ -33,6 +33,10 @@ img.member-picture {
 	height: 100px;
 }
 
+.meeting-attendants div.meeting-info {
+	max-width: 500px;
+}
+
 @media screen and (max-width: 768px){
 	img.member-picture {
 		width: 70%;
