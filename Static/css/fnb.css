@@ -37,6 +37,11 @@ img.member-picture {
 	max-width: 500px;
 }
 
+.meeting-attendants span.name {
+	display: inline-block;
+	margin-right: 4px;
+}
+
 @media screen and (max-width: 768px){
 	img.member-picture {
 		width: 70%;
