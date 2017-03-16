@@ -451,15 +451,7 @@ $(function () {
 
 		$.post('/games/Baduk/savedata',
 		{
-			subject: $('#text-subject').val(),
-			size: util.BoardSize,
-			changeMode: util.StoneChangeMode,
-			currentColor: util.StoneColor,
-			currentIndex: record.currentIndex,
-			indexMaximum: record.indexMaximum,
-			memo: $('#text-memo').val(),
-			stoneLog: JSON.stringify(record.stoneLog),
-			confirm: confirm
+			jsonDataText: JSON.stringify(formData)
 		},
 		function (json) {
 			var data = JSON.parse(json)
