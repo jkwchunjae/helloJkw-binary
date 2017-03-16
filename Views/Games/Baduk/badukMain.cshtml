@@ -435,7 +435,8 @@ $(function () {
 	})
 
 	function SaveData(confirm) {
-		var formData = {
+		$.post('/games/Baduk/savedata',
+		{
 			subject: $('#text-subject').val(),
 			size: util.BoardSize,
 			changeMode: util.StoneChangeMode,
@@ -445,13 +446,6 @@ $(function () {
 			memo: $('#text-memo').val(),
 			stoneLog: JSON.stringify(record.stoneLog),
 			confirm: confirm
-		}
-
-		alert(JSON.stringify(formData))
-
-		$.post('/games/Baduk/savedata',
-		{
-			jsonDataText: JSON.stringify(formData)
 		},
 		function (json) {
 			var data = JSON.parse(json)
