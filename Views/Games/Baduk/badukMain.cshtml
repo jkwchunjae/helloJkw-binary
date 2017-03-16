@@ -50,7 +50,7 @@
 			<button type="button" id="remove-stone" class="btn btn-default">판비우기</button>
 		</div>
 	</div>
-	@if (Model.isLogin)
+	@if (Model.isLogin || Model.isDebug)
 	{
 	<div class="util-item input-group">
 		<input type="text" id="text-subject" class="form-control" placeholder="제목"/>
@@ -449,9 +449,18 @@ $(function () {
 
 		alert(JSON.stringify(formData))
 
-		$.post('/games/Baduk/save',
-		formData
-		,
+		$.post('/games/Baduk/savedata',
+		{
+			subject: $('#text-subject').val(),
+			size: util.BoardSize,
+			changeMode: util.StoneChangeMode,
+			currentColor: util.StoneColor,
+			currentIndex: record.currentIndex,
+			indexMaximum: record.indexMaximum,
+			memo: $('#text-memo').val(),
+			stoneLog: JSON.stringify(record.stoneLog),
+			confirm: confirm
+		},
 		function (json) {
 			var data = JSON.parse(json)
 			if (data.Status == 'success') {
