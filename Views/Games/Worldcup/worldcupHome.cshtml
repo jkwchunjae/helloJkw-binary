@@ -1,5 +1,6 @@
 ﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
 @using helloJkw.Game.Worldcup;
+@using Extensions;
 @{
     Layout = "worldcup/worldcupLayout.cshtml";
     //fnb/fnbLayout.cshtml
@@ -32,10 +33,11 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (DashboardData data in Model.Dashboard)
+        @foreach (DashboardItem data in Model.Dashboard)
         {
+            var username = data.Username.Left(3) + "***";
             <tr>
-                <td>@data.Username</td>
+                <td>@username</td>
                 <td>@data.BettingGroup</td>
                 <td class="number">@data.MatchedCount.ToString("#,#")</td>
                 <td class="number">@data.BettingAmount.ToString("#,#")</td>
