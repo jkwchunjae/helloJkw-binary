@@ -15,6 +15,8 @@
     </ol>
 </p>
 
+<h2>수정 남은 시간 <span id="remain-time">1:23:12</span></h2>
+
 @if (Model.isLogin || Model.SimpleLogin)
 {
     <div class="row">
@@ -174,6 +176,7 @@ else
     <script type="text/javascript">
     var selectedTeam = [];
     var savedData = '[]';
+    var freezeTime = Date.parse('@Model.FreezeTime.ToString("yyyy-MM-dd HH:mm:ss")');
 
     @if (Model.isLogin || Model.SimpleLogin)
     {
@@ -220,5 +223,21 @@ else
            selectedTeam: JSON.stringify(selectedTeam)
         }, result => alert(result));
     }
+
+        setInterval(() => {
+            var remainSeconds = (freezeTime - Date.now()) / 1000;
+            if (remainSeconds < 0)
+                return;
+
+            console.log(remainSeconds)
+            var hours = Math.floor(remainSeconds / 3600);
+            hours = hours < 10 ? `0${hours}` : hours;
+            var minutes = Math.floor((remainSeconds - hours * 3600) / 60);
+            minutes = minutes < 10 ? `0${minutes}` : minutes;
+            var seconds = Math.floor(remainSeconds % 60);
+            seconds = seconds < 10 ? `0${seconds}` : seconds;
+
+            $('#remain-time').text(`${hours}:${minutes}:${seconds}`);
+        }, 1000)
     </script>
 }
