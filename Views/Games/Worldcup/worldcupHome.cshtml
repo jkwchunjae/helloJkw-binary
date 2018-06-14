@@ -229,7 +229,6 @@ else
             if (remainSeconds < 0)
                 return;
 
-            console.log(remainSeconds)
             var hours = Math.floor(remainSeconds / 3600);
             var minutes = Math.floor((remainSeconds - hours * 3600) / 60);
             minutes = minutes < 10 ? `0${minutes}` : minutes;
