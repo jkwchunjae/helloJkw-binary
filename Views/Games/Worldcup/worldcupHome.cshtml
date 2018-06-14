@@ -9,12 +9,42 @@
 <p>
     <ol>
         <li>본선 32팀 중 16강에 진출할 16팀을 고른다.</li>
-        <li>1만원을 건다. (경원에게 카카오페이로 보낸다.)</li>
+        <li>1만원을 건다. (경원에게 카카오페이로 보낸다. 사실 더 보내도 덜 보내도 된다.)</li>
         <li>매일 경기 결과를 확인하며 결과를 기다린다.</li>
         <li>분배: 모인금액 * 자신이 맞춘 개수 / 전체 모든 사람의 맞춘 개수</li>
     </ol>
 </p>
 
+@if (Model.isLogin || Model.SimpleLogin)
+{
+    <div class="row">
+    <div class="col-md-6">
+    <table class="table table-striped dashboard">
+        <thead>
+            <tr>
+                <th>아이디</th>
+                <th>그룹</th>
+                <th class="number">득점</th>
+                <th class="number">배팅금액</th>
+                <th class="number">현재기대값</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (DashboardData data in Model.Dashboard)
+        {
+            <tr>
+                <td>@data.Username</td>
+                <td>@data.BettingGroup</td>
+                <td class="number">@data.MatchedCount.ToString("#,#")</td>
+                <td class="number">@data.BettingAmount.ToString("#,#")</td>
+                <td class="number">@data.AllotmentAmount.ToString("#,#")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    </div>
+    </div>
+}
 
 @if (Model.isLogin)
 {
@@ -52,8 +82,9 @@ else
            <ul>
                @foreach (var teamData in groupData.TeamDataList)
                {
+                   var imgUrl = "https://img.fifa.com/images/flags/4/" + teamData.TeamCode + ".png";
                   <li class="group-team" id="team-@groupData.GroupCode-@teamData.TeamCode" onclick="selectTeam('@groupData.GroupCode', '@teamData.TeamCode')">
-                      <img src="@teamData.TeamPicture" class="country-picture" />
+                      <img src="@imgUrl" class="country-picture" />
                       <span class="team-name">@teamData.TeamName</span>
                   </li>
                }
@@ -126,6 +157,13 @@ else
 
     .sample-data img.country-picture {
         margin: 4px;
+    }
+
+    table.dashboard th, table.dashboard td {
+        text-align: center;
+    }
+    table.dashboard th.number, table.dashboard td.number {
+        text-align: right;
     }
 
 </style>
