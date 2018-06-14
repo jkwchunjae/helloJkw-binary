@@ -15,7 +15,7 @@
     </ol>
 </p>
 
-<h2>수정 남은 시간 <span id="remain-time">1:23:12</span></h2>
+<h2>수정 남은 시간 <span id="remain-time">0:00:00</span></h2>
 
 @if (Model.isLogin || Model.SimpleLogin)
 {
@@ -231,7 +231,6 @@ else
 
             console.log(remainSeconds)
             var hours = Math.floor(remainSeconds / 3600);
-            hours = hours < 10 ? `0${hours}` : hours;
             var minutes = Math.floor((remainSeconds - hours * 3600) / 60);
             minutes = minutes < 10 ? `0${minutes}` : minutes;
             var seconds = Math.floor(remainSeconds % 60);
