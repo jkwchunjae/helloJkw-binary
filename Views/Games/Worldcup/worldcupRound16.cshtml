@@ -197,9 +197,7 @@ else
            return removeTeam(matchId, teamCode);
         }
 
-        if (selectedTeam.filter(x => x.matchId == matchId).length >= 1) {
-           return alert('한 팀만 선택할 수 있습니다.');
-        }
+        selectedTeam = selectedTeam.filter(x => x.matchId !== matchId);
 
         selectedTeam.push({ matchId, teamCode });
 
