@@ -49,14 +49,16 @@
     {
         var targetString = userResult.Target.StringJoin(",");
         <tr class="user-result" data-email="@userResult.Email" data-target="@targetString">
-            <td>
+            <td class="select-target" onclick="selectTarget('@targetString')">
             @foreach (var teamCode in userResult.Target)
             {
                 var image = "https://img.fifa.com/images/flags/4/" + teamCode + ".png";
                 <img src="@image" class="result-table" />
             }
             </td>
-            <td>@userResult.Name</td>
+            <td>
+                <span class="select-user" onclick="selectUser('@userResult.Email')">@userResult.Name</span>
+            </td>
             <td>
             @foreach (var teamCode in userResult.List)
             {
@@ -81,6 +83,15 @@
     .user-result {
         display: none;
     }
+
+    .select-target {
+        cursor: pointer;
+    }
+
+    .select-user {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 </style>
 }
 
@@ -88,6 +99,7 @@
 {
 <script type="text/javascript">
     var selected = [];
+    var selectedTarget = ''
 
     function toggle(email) {
         if (email == 'all') {
@@ -98,6 +110,19 @@
             selected = selected.filter(x => x !== 'all')
             selected.push(email)
         }
+        selectedTarget = '';
+        updateHtml();
+    }
+
+    function selectUser(email) {
+        selected = [email];
+        selectedTarget = '';
+        updateHtml();
+    }
+
+    function selectTarget(target) {
+        selectedTarget = target;
+        selected = [];
         updateHtml();
     }
 
@@ -130,6 +155,15 @@
                 $(x).css('display', 'table-row')
             }
         })
+
+        if (selectedTarget !== '') {
+            $('.user-result').each((i, x) => {
+                var target = $(x).attr('data-target');
+                if (selectedTarget === target) {
+                    $(x).css('display', 'table-row')
+                }
+            })
+        }
     }
 
     updateHtml();
