@@ -1,29 +1,191 @@
-﻿body {
+﻿@font-face {
+    font-family: LotteMartDream;
+    font-style: normal;
+    font-weight: 400;
+    src: url(../fonts/LotteMartDreamMedium.woff2) format('woff2'), url(../fonts/LotteMartDreamMedium.woff) format('woff');
+}
+
+body {
     margin: 0;
     padding: 0;
+}
+
+span {
+    display: block;
+}
+
+.hidden {
+    display: none;
+}
+
+div.main {
+    position: fixed;
+    top: 0;
+    z-index: -1;
+    width: 100%;
+    max-height: 100vh;
 }
 
 div.main img {
     width: 100%;
 }
 
-@media screen and (min-width: 500px) {
+div.container {
+    position: relative;
+    width: 100%;
+    height: 100vh;
+}
+
+div.background {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    overflow: hidden;
+}
+
+div.background img {
+    width: 100%;
+}
+
+div.content {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+}
+
+div#thankyou {
+}
+
+div#thankyou div.background {
+    /*width: 100vw;*/
+    min-height: 100vh;
+    background-color: white;
+    opacity: 0.9;
+}
+
+/*body > div.content {
+    background-color: #ffe8f3;
+    opacity: 0.9;
+}*/
+
+.thankyou {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+
+    text-align: center;
+    font-family: 'Gaegu', cursive;
+    font-size: 2em;
+    word-break: keep-all;
+    width: 100%;
+}
+
+div#couple div.background {
+    max-height: 100vh;
+}
+
+div#couple .background img {
+}
+
+.person-circle {
+    border-radius: 50%;
+    max-width: 15em;
+    max-height: 15em;
+    overflow: hidden;
+}
+
+.person-circle img {
+    width: 100%;
+}
+
+
+
+@media screen and (min-width: 750px) {
     div.main {
         overflow: hidden;
-        max-height: 90vh;
-        border: 1px solid groove;
     }
 
     div.main img {
-        margin-top: -20%;
+        /*margin-top: 0%;*/
     }
 
     .mobile {
         display: none;
     }
+
+    .couple-content {
+        font-family: LotteMartDream;
+        /*color: white;*/
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .person {
+        vertical-align: top;
+    }
+
+    #person-left {
+        margin-top: 20vw;
+        color: black;
+    }
+
+    #person-right {
+        margin-top: 17vw;
+        color: white;
+        text-align: right;
+        float: right;
+    }
+
+    #person-right > div {
+        float: right;
+    }
+
+    .couple-content > div {
+        max-width: 60%;
+    }
+
+    .couple-content  .person {
+        display: inline-block;
+        width: 48%;
+    }
+
+    .couple-content .person-inner {
+        position: relative;
+        /*top: -1em;*/
+        max-width: 15em;
+    }
+
+    .couple-content > div {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .my-name {
+        font-size: 4em;
+    }
+
+    .parent-name {
+        font-size: 1.6em;
+    }
+
+    .huge-amp {
+        font-family: LotteMartDream,sans-serif;
+        font-size: 10em;
+        text-align: center;
+        position: relative;
+        top: -1em;
+    }
 }
 
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 750px) {
+    div.main {
+        overflow: hidden;
+        max-height: 100vh;
+    }
+
     .pc {
         display: none;
     }
