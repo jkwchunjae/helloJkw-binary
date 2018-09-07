@@ -187,11 +187,11 @@ div#couple div.background {
     }
 
     div.container#couple {
-        height: 150vh;
+        height: 200vh;
     }
 
     div#couple div.background {
-        max-height: 150vh;
+        max-height: 200vh;
     }
 
     .person {
