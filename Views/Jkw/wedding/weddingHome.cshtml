@@ -1,5 +1,6 @@
 ﻿@{ 
     string previewImage = Model.PreviewImage + ".jpg";
+    bool isCatholic = Model.IsCatholic;
 }
 <!DOCTYPE html>
 <html xmlns:og="http://ogp.me/ns#" lang="ko">
@@ -11,13 +12,13 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="http://hellojkw.com/wedding">
     <meta property="og:image" content="http://hellojkw.com/jkw/wedding/wedding-@previewImage">
-    <meta property="og:description" content="2018.10.20 11:00 대방동성당">
+    <meta property="og:description" content="2018.10.20 오전 11시 대방동성당">
     <meta name="author" content="유태희, 전경원">
-    <meta name="description" content="2018.10.20 11:00 대방동성당">
+    <meta name="description" content="2018.10.20 오전 11시 대방동성당">
     <link rel="icon" href="/jkw/others/card-favicon.png">
     <link rel="stylesheet" href="/Static/css/wedding.css">
     <link rel="stylesheet" href="/Static/css/wedding2.css">
-    <link href="https://fonts.googleapis.com/css?family=Gaegu|Gamja+Flower|Hi+Melody|Jua|Nanum+Gothic|Nanum+Pen+Script|Poor+Story|Sunflower:300" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Gaegu" rel="stylesheet">
     @*<script src="http://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>*@
 </head>
 <body class="home">
@@ -54,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <div class="container" id="couple">
+        <div class="container" id="couple2">
             <div class="background">
                 <img class="pc" src="/jkw/wedding/pic2-pc.jpg" />
                 <img class="mobile" src="/jkw/wedding/pic2-mobile7.jpg" />
@@ -78,7 +79,15 @@
                             </div>
                             <div class="description">
                                 <span class="my-name">경원</span>
-                                <span class="parent-name">전대수 황경욱의 아들</span>
+                                @if (isCatholic)
+                                {
+                                    <span class="catholic catholic-name">극가스테파노</span>
+                                    <span class="catholic parent-name">전대수 미카엘<br/>황경욱 루치아<br/>장남</span>
+                                }
+                                else
+                                {
+                                    <span class="parent-name">전대수 황경욱의 아들</span>
+                                }
                                 <div class="message mobile">
                                     <span>
                                         여전히 부족한 저를
@@ -103,15 +112,24 @@
                             </div>
                             <div class="description">
                                 <span class="my-name">태희</span>
-                                <span class="parent-name">유재한 이향운의 딸</span>
+                                @if (isCatholic)
+                                {
+                                    <span class="catholic catholic-name">아녜스</span>
+                                    <span class="catholic parent-name">유재한 바오로<br />이향운 세실리아<br />차녀</span>
+                                }
+                                else
+                                {
+                                    <span class="parent-name">유재한 이향운의 딸</span>
+                                }
+
                                 <div class="message mobile">
                                     <span>
                                         저를 더 성장시키는 남자를 만났습니다.
-                                        <br/>
+                                        <br />
                                         혼자 해낸 것이라 생각했던 일들이
-                                        <br/>
+                                        <br />
                                         이 사람 덕분에 가능했음을 깨달았습니다.
-                                        <br/>
+                                        <br />
                                         이제 둘이 함께 성장하며 살아가고 싶습니다.
                                     </span>
                                 </div>
