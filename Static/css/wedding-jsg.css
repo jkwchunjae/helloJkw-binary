@@ -258,11 +258,11 @@ div#couple2 div.background {
     }
 
     div.container#couple2 {
-        height: 180vh;
+        height: 250vh;
     }
 
     div#couple2 div.background {
-        height: 180vh;
+        height: 250vh;
         background-color: white;
         opacity: 0.9;
     }
