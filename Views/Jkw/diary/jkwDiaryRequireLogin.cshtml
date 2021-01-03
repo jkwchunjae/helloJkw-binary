@@ -2,6 +2,8 @@
 	Layout = "Layout.cshtml";
 }
 
+@if (false)
+{
 <div class="container">
 	<p>
 		안녕하세요! 전경원의 일기장입니다.
@@ -24,6 +26,16 @@
 <button class="btn-login">로그인</button>
 </p>
 </div>
+}
+else
+{
+    <div class="container">
+        <p>일기장 서비스를 Azure로 옮겼습니다.</p>
+        <p>아래 링크로 접속해주세요.</p>
+
+        <a href="https://hellojkwcore.azurewebsites.net/">새로운 일기장</a>
+    </div>
+}
 
 @section Css
 {
